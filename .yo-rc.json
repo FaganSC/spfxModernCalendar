@@ -1,0 +1,16 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "version": "1.14.0",
+    "libraryName": "modern-calendar",
+    "libraryId": "13938adf-d569-44ac-8ddf-bf541b851ddb",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "modern-calendar",
+    "solutionShortDescription": "modern-calendar description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

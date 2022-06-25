@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "modern-calendar-client-side-solution",
+    "id": "13938adf-d569-44ac-8ddf-bf541b851ddb",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.14.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "modern-calendar description"
+      },
+      "longDescription": {
+        "default": "modern-calendar description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "modern-calendar Feature",
+        "description": "The feature that activates elements of the modern-calendar solution.",
+        "id": "5a270228-3035-4071-bd77-9436aafc5b4c",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/modern-calendar.sppkg"
+  }
+}
