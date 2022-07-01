@@ -1,0 +1,102 @@
+trigger:
+  branches:
+    include:
+      - develop
+      - release/*
+      - feature/*
+      - refs/tags/*
+  paths:
+    exclude:
+    - README.md
+    - azure-pipelines.yml
+    - documentation
+resources:
+  repositories:
+  - repository: AzurePipelinesTemplates
+    type: github
+    endpoint: FaganSC
+    name: FaganSC/AzurePipelinesTemplates
+    ref: master
+variables:
+  node_version: '14.x'
+  package_manager: 'pnpm'
+name: $(Build.DefinitionName) $(SourceBranchName) $(Date:yyyyMMdd)$(Rev:.r)
+stages:
+- stage: Versioning
+  jobs:
+    - template: general/versioning.yml@AzurePipelinesTemplates
+- stage: Build
+  jobs:
+    - template: spfx/build.yml@AzurePipelinesTemplates
+  dependsOn: 
+    - Versioning
+- stage: Test
+  dependsOn: 
+    - Build
+  jobs:
+    - template: spfx/test.yml@AzurePipelinesTemplates
+      parameters:
+        working_directory: 
+        package_manager: ${{ variables.package_manager }}
+        node_version: ${{ variables.node_version }}
+- stage: GitHubPreRelease
+  displayName: GitHub PreRelease
+  dependsOn:
+    - Test
+  jobs:
+    - template: spfx/release.yml@AzurePipelinesTemplates
+      parameters:
+        release_title: 'Pre-Release $(Build.BuildNumber)'
+        target_environment: PreRelease
+        gitHubConnection: GitHub
+        condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release'))
+        isPreRelease: True
+- stage: GitHubRelease
+  displayName: GitHub Release
+  dependsOn:
+    - Test
+  jobs:
+    - template: spfx/release.yml@AzurePipelinesTemplates
+      parameters:
+        release_title: 'Release $(Build.BuildNumber)'
+        target_environment: Production
+        gitHubConnection: GitHub
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        isPreRelease: False
+- stage: DeployDevelopment
+  displayName: Deploy to Development Tenant SharePoint App Catalog
+  dependsOn:
+    - Test
+  jobs:
+    - template: spfx/deploy.yml@AzurePipelinesTemplates
+      parameters:
+        target_environment: Development
+        variables_group: DevelopmentTenant
+        o365cli_deploy_extra_arguments: '--skipFeatureDeployment'
+        condition: succeeded()
+- stage: DeployPreRelease
+  displayName: Deploy to Test Tenant SharePoint App Catalog
+  dependsOn:
+    - GitHubPreRelease
+  jobs:
+    - template: spfx/deploy.yml@AzurePipelinesTemplates
+      parameters:
+        target_environment: PreRelease
+        isPreRelease: True
+        hasChangeLog: True
+        variables_group: TestTenant
+        o365cli_deploy_extra_arguments: '--skipFeatureDeployment'
+        condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release'))
+- stage: DeployProduction
+  displayName: Deploy to Production Tenant SharePoint App Catalog
+  dependsOn:
+    - GitHubRelease
+  jobs:
+    - template: spfx/deploy.yml@AzurePipelinesTemplates
+      parameters:
+        target_environment: Release
+        isPreRelease: False
+        hasChangeLog: True
+        variables_group: ProductionTenant
+        o365cli_deploy_extra_arguments: '--skipFeatureDeployment'
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
