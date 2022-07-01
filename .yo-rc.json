@@ -2,7 +2,7 @@
   "@microsoft/generator-sharepoint": {
     "plusBeta": false,
     "isCreatingSolution": true,
-    "version": "1.14.0",
+    "version": "1.15.0",
     "libraryName": "modern-calendar",
     "libraryId": "13938adf-d569-44ac-8ddf-bf541b851ddb",
     "environment": "spo",
