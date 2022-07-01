@@ -16,6 +16,7 @@
     "@microsoft/sp-property-pane": "1.15.0",
     "@microsoft/sp-webpart-base": "1.15.0",
     "@pnp/pnpjs": "^2.13.0",
+    "@pnp/sp": "^3.4.1",
     "@pnp/spfx-controls-react": "^3.8.1",
     "@pnp/spfx-property-controls": "^3.7.0",
     "@types/react-big-calendar": "^0.38.0",

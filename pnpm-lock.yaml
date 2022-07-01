@@ -13,6 +13,7 @@ specifiers:
   '@microsoft/sp-property-pane': 1.15.0
   '@microsoft/sp-webpart-base': 1.15.0
   '@pnp/pnpjs': ^2.13.0
+  '@pnp/sp': ^3.4.1
   '@pnp/spfx-controls-react': ^3.8.1
   '@pnp/spfx-property-controls': ^3.7.0
   '@rushstack/eslint-config': 2.5.1
@@ -39,6 +40,7 @@ dependencies:
   '@microsoft/sp-property-pane': 1.15.0_7ombvvupg4tnmt4iqt5m47i6cu
   '@microsoft/sp-webpart-base': 1.15.0_7ombvvupg4tnmt4iqt5m47i6cu
   '@pnp/pnpjs': 2.13.0
+  '@pnp/sp': 3.4.1
   '@pnp/spfx-controls-react': 3.8.1_7ombvvupg4tnmt4iqt5m47i6cu
   '@pnp/spfx-property-controls': 3.7.0_7ombvvupg4tnmt4iqt5m47i6cu
   '@types/react-big-calendar': 0.38.0
@@ -2475,6 +2477,13 @@ packages:
       tslib: 2.3.0
     dev: false
 
+  /@pnp/core/3.4.1:
+    resolution: {integrity: sha512-BP7HAIODQ7hhrPs31sbv4wenWyvkPCSk2VGkj4q2dRekJLR+iMDmOck1TuqtFnWbIb05jpAEn8yiUSyZP1WIOQ==}
+    engines: {node: '>=14.15.1'}
+    dependencies:
+      tslib: 2.4.0
+    dev: false
+
   /@pnp/graph/2.13.0:
     resolution: {integrity: sha512-2NzJG0l8A+26FOlAbu5nwomLw5rRi6PbQadsBJOXj3btylHqt1g33nxaMoiVyRdteLJJWsTqXFYJNMF4hQ2jfQ==}
     dependencies:
@@ -2541,6 +2550,14 @@ packages:
       '@pnp/sp': 2.13.0
       '@pnp/sp-addinhelpers': 2.13.0
       tslib: 2.3.0
+    dev: false
+
+  /@pnp/queryable/3.4.1:
+    resolution: {integrity: sha512-Zrflw5HPEY9d8vchGWjXKlgDlDQBVAFP2TfKGSy6HkL9KgyeOMN1+fpTu4Z/ayP5CtwunHXXQAqPztG3Nbk5aw==}
+    engines: {node: '>=14.15.1'}
+    dependencies:
+      '@pnp/core': 3.4.1
+      tslib: 2.4.0
     dev: false
 
   /@pnp/sp-addinhelpers/2.13.0:
@@ -2613,6 +2630,16 @@ packages:
       '@pnp/logging': 2.5.0
       '@pnp/odata': 2.5.0
       tslib: 2.2.0
+    dev: false
+
+  /@pnp/sp/3.4.1:
+    resolution: {integrity: sha512-Lcddy057GXVmBRQagUgte0/jkvpTr75aUef6U15ZQJUrhMVCpQlAkVQOgkYirFcBJSFCeMlgIm/PjAedxmphqw==}
+    engines: {node: '>=14.15.1'}
+    requiresBuild: true
+    dependencies:
+      '@pnp/core': 3.4.1
+      '@pnp/queryable': 3.4.1
+      tslib: 2.4.0
     dev: false
 
   /@pnp/spfx-controls-react/3.8.1_7ombvvupg4tnmt4iqt5m47i6cu:
