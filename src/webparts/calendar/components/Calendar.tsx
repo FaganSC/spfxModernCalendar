@@ -45,7 +45,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   private _getPrimaryCalendarEvents = async (newDateView?: Date): Promise<void> => {
     this.setState({ isLoading: true });
     const { primaryListId, updateListProperty } = this.props;
-    const { currentView, dateView } = this.state;
+    const { currentView } = this.state;
     let listId: string = primaryListId;
     if (!listId) {
       listId = await this._eventService.getDefaultEventsList();
@@ -70,8 +70,9 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   }
 
   private _changeDate = (action: string): void => {
+    const { dateView, currentView } = this.state;
     let navigateDate: moment.Duration = moment.duration({ 'month': 1 });
-    switch (this.state.currentView) {
+    switch (currentView) {
       case "week":
       case "work_week":
         navigateDate = moment.duration({ 'week': 1 });
@@ -87,16 +88,16 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
     let newDateView: Date = new Date();
     switch (action) {
       case "NavigateForward":
-        newDateView = moment(this.state.dateView).add(navigateDate).toDate();
+        newDateView = moment(dateView).add(navigateDate).toDate();
         break;
       case "NavigateBack":
-        newDateView = moment(this.state.dateView).subtract(navigateDate).toDate();
+        newDateView = moment(dateView).subtract(navigateDate).toDate();
         break;
       default:
         newDateView = moment().toDate();
     }
     this.setState({ dateView: newDateView });
-    this._getPrimaryCalendarEvents(newDateView);
+    this._getPrimaryCalendarEvents(newDateView).catch(error => console.error("Oh no!", error));
   }
 
   /**
@@ -107,6 +108,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   }
 
   private _getViewSelector = (): ICommandBarItemProps[] => {
+    const { currentView } = this.state;
     const _farItems: ICommandBarItemProps[] = [
       {
         key: 'filterSubmissionPeriod',
@@ -142,7 +144,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
       }
     ];
 
-    switch (this.state.currentView) {
+    switch (currentView) {
       case 'week':
         _farItems[0].text = strings.lblWeek;
         _farItems[0].iconProps = { iconName: 'CalendarWeek' };
