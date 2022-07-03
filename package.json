@@ -10,11 +10,13 @@
     "serve": "gulp serve-deprecated --nobrowser"
   },
   "dependencies": {
+    "@fluentui/react": "^8.77.3",
     "@microsoft/sp-core-library": "1.15.0",
     "@microsoft/sp-lodash-subset": "1.15.0",
     "@microsoft/sp-office-ui-fabric-core": "1.15.0",
     "@microsoft/sp-property-pane": "1.15.0",
     "@microsoft/sp-webpart-base": "1.15.0",
+    "@pnp/logging": "3.4.1",
     "@pnp/pnpjs": "^2.13.0",
     "@pnp/sp": "^3.4.1",
     "@pnp/spfx-controls-react": "^3.8.1",
@@ -26,12 +28,12 @@
     "react-big-calendar": "^0.40.2",
     "react-dom": "16.13.1",
     "react-draft-wysiwyg": "^1.14.7",
+    "react-loading-overlay": "^1.0.1",
     "tslib": "2.3.1"
   },
   "devDependencies": {
     "@microsoft/eslint-config-spfx": "1.15.0",
     "@microsoft/eslint-plugin-spfx": "1.15.0",
-    "@microsoft/rush-stack-compiler-3.9": "0.4.47",
     "@microsoft/rush-stack-compiler-4.5": "0.2.2",
     "@microsoft/sp-build-web": "1.15.0",
     "@microsoft/sp-module-interfaces": "1.15.0",

@@ -1,19 +1,19 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
-import {
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField
-} from '@microsoft/sp-property-pane';
+import { IPropertyPaneConfiguration, PropertyPaneDropdown } from '@microsoft/sp-property-pane';
+import { PropertyFieldListPicker, PropertyFieldListPickerOrderBy } from '@pnp/spfx-property-controls/lib/PropertyFieldListPicker';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import * as strings from 'CalendarWebPartStrings';
 import Calendar from './components/Calendar';
 import { ICalendarProps } from './components/ICalendarProps';
+import { View as CalendarViews } from 'react-big-calendar';
 
 export interface ICalendarWebPartProps {
-  description: string;
+  primaryListId: string;
+  defaultView: CalendarViews;
 }
 
 export default class CalendarWebPart extends BaseClientSideWebPart<ICalendarWebPartProps> {
@@ -31,7 +31,13 @@ export default class CalendarWebPart extends BaseClientSideWebPart<ICalendarWebP
     const element: React.ReactElement<ICalendarProps> = React.createElement(
       Calendar,
       {
-        description: this.properties.description,
+        context: this.context,
+        primaryListId: this.properties.primaryListId,
+        defaultView: this.properties.defaultView,
+        updateListProperty: (value: string) => {
+          this.properties.primaryListId = value;
+        },
+
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
@@ -84,8 +90,29 @@ export default class CalendarWebPart extends BaseClientSideWebPart<ICalendarWebP
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                PropertyFieldListPicker('primaryListId', {
+                  label: strings.PrimaryCalendarList,
+                  baseTemplate: 106,
+                  selectedList: this.properties.primaryListId,
+                  includeHidden: false,
+                  orderBy: PropertyFieldListPickerOrderBy.Title,
+                  disabled: false,
+                  onPropertyChange: this.onPropertyPaneFieldChanged.bind(this),
+                  properties: this.properties,
+                  // @ts-ignore
+                  context: this.context,
+                  onGetErrorMessage: null,
+                  deferredValidationTime: 0,
+                  key: 'listPickerFieldId'
+                }),
+                PropertyPaneDropdown('defaultView', {
+                  label: strings.DefaultViewFieldLabel,
+                  options: [
+                    { key: "month", text: strings.lblMonth },
+                    { key: "week", text: strings.lblWeek },
+                    { key: "work_week", text: strings.lblWorkWeek },
+                    { key: "day", text: strings.lblDay }
+                  ]
                 })
               ]
             }
