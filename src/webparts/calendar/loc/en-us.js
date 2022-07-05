@@ -4,13 +4,13 @@ define([], function () {
     "AppLocalEnvironmentTeams": "The app is running on your local environment as Microsoft Teams app",
     "AppSharePointEnvironment": "The app is running on SharePoint page",
     "AppTeamsTabEnvironment": "The app is running in Microsoft Teams",
-    
-    
+
+
     "PropertyPaneDescription": "Description",
     "BasicGroupName": "Group Name",
-    "PrimaryCalendarList":"Primary Calendar List",
+    "PrimaryCalendarList": "Primary Calendar List",
     "DefaultViewFieldLabel": "Default View",
-    
+
     "lblToday": "Today",
     "lblPrevious": "Previous",
     "lblNext": "Next",
@@ -21,6 +21,13 @@ define([], function () {
     "lblWorkWeek": "Work Week",
     "lblNew": "New",
     "lblNewCalendarEvent": "Calendar Event",
-    "lblShare": "Share"
+    "lblShare": "Share",
+    "lblEditItem": "Edit",
+    "lblVersionHistory": "Verison History",
+    "lblShareWith": "Share With",
+    "lblDelete": "Delete",
+    "lblSaveItem": "Save",
+    "lblCancelItem":"Cancel",
+    "lblCloseItem":"Close"
   }
 });

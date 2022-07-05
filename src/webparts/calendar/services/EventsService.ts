@@ -6,11 +6,11 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/regional-settings/web";
+import { IList, IListInfo } from "@pnp/sp/lists";
 
 import * as moment from 'moment';
 
 import { DisplayEvents } from "../models/dataModels";
-import { IList, IListInfo } from "@pnp/sp/lists";
 
 export class EventService {
     private _sp: SPFI;

@@ -31,7 +31,7 @@ export default class CalendarWebPart extends BaseClientSideWebPart<ICalendarWebP
     const element: React.ReactElement<ICalendarProps> = React.createElement(
       Calendar,
       {
-        context: this.context,
+        wpContext: this.context,
         primaryListId: this.properties.primaryListId,
         defaultView: this.properties.defaultView,
         updateListProperty: (value: string) => {

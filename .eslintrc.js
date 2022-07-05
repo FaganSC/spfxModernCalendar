@@ -3,7 +3,8 @@ module.exports = {
   extends: ['@microsoft/eslint-config-spfx/lib/profiles/react'],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
-    "@microsoft/spfx/no-async-await": "off"
+    "@microsoft/spfx/no-async-await": "off",
+    "react/jsx-no-bind": "off"
   },
   parserOptions: { tsconfigRootDir: __dirname }
 };

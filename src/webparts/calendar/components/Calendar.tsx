@@ -11,7 +11,9 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { EventService } from '../services/EventsService';
 import { DisplayEvents } from '../models/dataModels';
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
-import { IButtonProps } from 'office-ui-fabric-react/lib/Button';
+import { IButtonProps } from '@fluentui/react/lib/Button';
+import { viewType } from '../../../fagansc-spfx-form-elements/SPForm';
+import FormPanel from './FormPanel/FormPanel';
 
 const localizer: DateLocalizer = momentLocalizer(moment);
 
@@ -21,34 +23,43 @@ const _overflowItems: ICommandBarItemProps[] = [];
 
 export default class Calendar extends React.Component<ICalendarProps, ICalendarState> {
   private _eventService: EventService;
+
   public constructor(props: ICalendarProps) {
     super(props);
-    this._eventService = new EventService(this.props.context);
+    this._eventService = new EventService(props.wpContext);
 
     this._getPrimaryCalendarEvents = this._getPrimaryCalendarEvents.bind(this);
 
+    this._onSelectEvent = this._onSelectEvent.bind(this);
     this._changeView = this._changeView.bind(this);
     this._changeDate = this._changeDate.bind(this);
+    this._onTogglePanel = this._onTogglePanel.bind(this);
 
     this._renderEvent = this._renderEvent.bind(this);
     this._renderToolbar = this._renderToolbar.bind(this);
-    moment.locale(props.context.pageContext.cultureInfo.currentUICultureName);
+
+    moment.locale(props.wpContext.pageContext.cultureInfo.currentUICultureName);
 
     this.state = {
       events: [],
       dateView: new Date(),
       currentView: this.props.defaultView,
-      isLoading: true
+      isLoading: true,
+      isPanelOpen: false,
+      formElements: [],
+      itemId: null,
+      formView: viewType.Display
     };
   }
 
   private _getPrimaryCalendarEvents = async (newDateView?: Date): Promise<void> => {
+    const { _eventService } = this;
     this.setState({ isLoading: true });
     const { primaryListId, updateListProperty } = this.props;
     const { currentView } = this.state;
     let listId: string = primaryListId;
     if (!listId) {
-      listId = await this._eventService.getDefaultEventsList();
+      listId = await _eventService.getDefaultEventsList();
       updateListProperty(listId);
     }
     let startDate: string = moment().startOf('month').format("YYYY-MM-DD");
@@ -61,8 +72,12 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
       }
     }
 
-    const events: DisplayEvents[] = await this._eventService.getPrimaryCalendarEvents(listId, startDate, endDate)
+    const events: DisplayEvents[] = await _eventService.getPrimaryCalendarEvents(listId, startDate, endDate)
     this.setState({ events: events, isLoading: false });
+  }
+
+  private _onSelectEvent = (calEvent): void => {
+    this._onTogglePanel(viewType.Display, calEvent.Id);
   }
 
   private _changeView = (newView: View): void => {
@@ -98,6 +113,12 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
     }
     this.setState({ dateView: newDateView });
     this._getPrimaryCalendarEvents(newDateView).catch(error => console.error("Oh no!", error));
+  }
+
+  private _onTogglePanel = (viewType: viewType, itemId?: number): void => {
+    const { isPanelOpen } = this.state;
+    itemId = itemId === undefined ? itemId : null;
+    this.setState({ itemId: itemId, formView: viewType, isPanelOpen: !isPanelOpen });
   }
 
   /**
@@ -166,7 +187,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   }
 
   private _renderToolbar = (calendarProps: any): React.ReactElement<[]> => {
-    const { _getViewSelector } = this;
+    const { _getViewSelector, _changeDate, _onTogglePanel } = this;
 
     const _items: ICommandBarItemProps[] = [
       {
@@ -180,6 +201,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
               key: 'calendarEvent',
               text: strings.lblNewCalendarEvent,
               iconProps: { iconName: 'Calendar' },
+              onClick: () => _onTogglePanel(viewType.New)
             },
           ],
         },
@@ -188,19 +210,19 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
         key: 'navigateBack',
         text: strings.lblPrevious,
         iconProps: { iconName: 'NavigateBack' },
-        onClick: () => this._changeDate('NavigateBack'),
+        onClick: () => _changeDate('NavigateBack'),
       },
       {
         key: 'navigateToday',
         text: strings.lblToday,
         iconProps: { iconName: 'GotoToday' },
-        onClick: () => this._changeDate('NavigateToday'),
+        onClick: () => _changeDate('NavigateToday'),
       },
       {
         key: 'navigateForward',
         text: strings.lblNext,
         iconProps: { iconName: 'NavigateBackMirrored' },
-        onClick: () => this._changeDate('NavigateForward'),
+        onClick: () => _changeDate('NavigateForward'),
       },
       {
         key: 'share',
@@ -241,15 +263,9 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   }
 
   public render(): React.ReactElement<ICalendarProps> {
-    const { _renderEvent, _renderToolbar } = this;
-    const { events, dateView, currentView, isLoading } = this.state;
-    const {
-      //description,
-      //isDarkTheme,
-      //environmentMessage,
-      hasTeamsContext,
-      //userDisplayName
-    } = this.props;
+    const { _renderEvent, _renderToolbar, _onTogglePanel } = this;
+    const { events, dateView, currentView, isLoading, isPanelOpen, itemId, formView } = this.state;
+    const { wpContext, hasTeamsContext, primaryListId } = this.props;
 
     return (
       <section className={`${styles.calendar} ${hasTeamsContext ? styles.teams : ''}`} >
@@ -269,7 +285,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
               event: _renderEvent,
               toolbar: _renderToolbar,
             }}
-            //onSelectEvent={this.onSelectEvent}
+            onSelectEvent={this._onSelectEvent}
             defaultDate={moment().startOf('day').toDate()}
             views={{
               day: true,
@@ -291,6 +307,13 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
             }
           />
         </LoadingOverlay>
+        <FormPanel
+          wpContext={wpContext}
+          primaryListId={primaryListId}
+          listId={itemId}
+          viewDisplay={formView}
+          isPanelOpen={isPanelOpen}
+          onTogglePanel={(viewDisplay) => _onTogglePanel(viewDisplay)} />
       </section >
     );
   }
