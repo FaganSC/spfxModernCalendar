@@ -12,7 +12,7 @@ import { EventService } from '../services/EventsService';
 import { DisplayEvents } from '../models/dataModels';
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
 import { IButtonProps } from '@fluentui/react/lib/Button';
-import { viewType } from '../../../fagansc-spfx-form-elements/SPForm';
+import { FormType } from '../../../fagansc-spfx-form-elements';
 import FormPanel from './FormPanel/FormPanel';
 
 const localizer: DateLocalizer = momentLocalizer(moment);
@@ -48,7 +48,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
       isPanelOpen: false,
       formElements: [],
       itemId: null,
-      formView: viewType.Display
+      formType: FormType.Display
     };
   }
 
@@ -77,7 +77,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   }
 
   private _onSelectEvent = (calEvent): void => {
-    this._onTogglePanel(viewType.Display, calEvent.Id);
+    this._onTogglePanel(FormType.Display, calEvent.Id);
   }
 
   private _changeView = (newView: View): void => {
@@ -115,10 +115,10 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
     this._getPrimaryCalendarEvents(newDateView).catch(error => console.error("Oh no!", error));
   }
 
-  private _onTogglePanel = (viewType: viewType, itemId?: number): void => {
+  private _onTogglePanel = (formType: FormType, itemId?: number): void => {
     const { isPanelOpen } = this.state;
     itemId = itemId === undefined ? itemId : null;
-    this.setState({ itemId: itemId, formView: viewType, isPanelOpen: !isPanelOpen });
+    this.setState({ itemId: itemId, formType: formType, isPanelOpen: !isPanelOpen });
   }
 
   /**
@@ -201,7 +201,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
               key: 'calendarEvent',
               text: strings.lblNewCalendarEvent,
               iconProps: { iconName: 'Calendar' },
-              onClick: () => _onTogglePanel(viewType.New)
+              onClick: () => _onTogglePanel(FormType.New)
             },
           ],
         },
@@ -264,7 +264,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
 
   public render(): React.ReactElement<ICalendarProps> {
     const { _renderEvent, _renderToolbar, _onTogglePanel } = this;
-    const { events, dateView, currentView, isLoading, isPanelOpen, itemId, formView } = this.state;
+    const { events, dateView, currentView, isLoading, isPanelOpen, itemId, formType } = this.state;
     const { wpContext, hasTeamsContext, primaryListId } = this.props;
 
     return (
@@ -311,7 +311,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
           wpContext={wpContext}
           primaryListId={primaryListId}
           listId={itemId}
-          viewDisplay={formView}
+          formType={formType}
           isPanelOpen={isPanelOpen}
           onTogglePanel={(viewDisplay) => _onTogglePanel(viewDisplay)} />
       </section >

@@ -7,7 +7,7 @@ import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar
 //import { IButtonProps } from '@fluentui/react/lib/Button';
 import { Panel, PanelType } from '@fluentui/react/lib/Panel';
 import { SPForm } from '../../../../fagansc-spfx-form-elements/controls/SPForm/SPForm';
-import { viewType } from '../../../../fagansc-spfx-form-elements';
+import { FormType } from '../../../../fagansc-spfx-form-elements';
 
 export default class FormPanel extends React.Component<IFormPanelProps, IFormPanelState> {
   public constructor(props: IFormPanelProps) {
@@ -17,7 +17,7 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
     this._onEditItem = this._onEditItem.bind(this);
     this.state = {
       isPanelOpen: false,
-      viewDisplay: props.viewDisplay
+      formType: props.formType
     };
   }
 
@@ -31,13 +31,13 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
   }
 
   private _onEditItem = (): void => {
-    this.setState({ viewDisplay: viewType.Edit });
+    this.setState({ formType: FormType.Edit });
   }
 
   public componentDidUpdate = (prevProps: IFormPanelProps): void => {
-    const { viewDisplay } = this.props;
-    if (prevProps.viewDisplay !== viewDisplay) {
-      this.setState({ viewDisplay: viewDisplay });
+    const { formType } = this.props;
+    if (prevProps.formType !== formType) {
+      this.setState({ formType: formType });
     }
   }
 
@@ -50,10 +50,10 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
 
   public render(): React.ReactElement<IFormPanelProps> {
     const { _onSaveItem, _onEditItem } = this;
-    const { viewDisplay } = this.state;
+    const { formType } = this.state;
     const { primaryListId, wpContext, isPanelOpen, onTogglePanel } = this.props;
     const _items: ICommandBarItemProps[] = [];
-    if (viewDisplay === viewType.Display) {
+    if (formType === FormType.Display) {
       _items.push({
         key: 'editItem',
         text: strings.lblEditItem,
@@ -63,11 +63,11 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
         key: 'closeItem',
         text: strings.lblCloseItem,
         iconProps: { iconName: 'ChromeClose' },
-        onClick: () => onTogglePanel(this.state.viewDisplay),
+        onClick: () => onTogglePanel(this.state.formType),
       });
     }
 
-    if (viewDisplay === viewType.Edit || viewDisplay === viewType.New) {
+    if (formType === FormType.Edit || formType === FormType.New) {
       _items.push({
         key: 'saveItem',
         text: strings.lblSaveItem,
@@ -77,7 +77,7 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
         key: 'cancelItem',
         text: strings.lblCancelItem,
         iconProps: { iconName: 'Cancel' },
-        onClick: () => onTogglePanel(this.state.viewDisplay),
+        onClick: () => onTogglePanel(this.state.formType),
       });
     }
 
@@ -102,11 +102,11 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
     );
     let PanelTitle: string;
 
-    switch (viewDisplay) {
-      case viewType.New:
+    switch (formType) {
+      case FormType.New:
         PanelTitle = "New Event";
         break;
-      case viewType.Edit:
+      case FormType.Edit:
         PanelTitle = "Edit Event";
         break;
       default:
@@ -117,12 +117,12 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
     return (
       <Panel
         isOpen={isPanelOpen}
-        onDismiss={() => onTogglePanel(this.state.viewDisplay)}
+        onDismiss={() => onTogglePanel(this.state.formType)}
         type={PanelType.medium}
         closeButtonAriaLabel="Close"
         headerText={PanelTitle} >
         <CommandBar items={_items} />
-        <SPForm context={wpContext} listId={primaryListId} viewType={viewType.New} />
+        <SPForm context={wpContext} listId={primaryListId} formType={FormType.New} />
       </Panel>
     );
   }

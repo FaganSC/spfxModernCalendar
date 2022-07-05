@@ -1,6 +1,6 @@
-import { viewType } from "../../../../fagansc-spfx-form-elements";
+import { FormType } from "../../../../fagansc-spfx-form-elements";
 
 export interface IFormPanelState {
   isPanelOpen: boolean;
-  viewDisplay: viewType;
+  formType: FormType;
 }
