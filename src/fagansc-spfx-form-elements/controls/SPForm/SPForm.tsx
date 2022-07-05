@@ -16,7 +16,6 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
     }
 
     public componentDidMount = (): void => {
-        //alert('Load');
         const { _formListService } = this;
         const { listId } = this.props;
         _formListService.getListContext(listId)
@@ -28,7 +27,7 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
     }
 
     public componentWillUnmount = (): void => {
-        //alert('Unload');
+
     }
 
     public componentDidUpdate = (prevProps): void => {
