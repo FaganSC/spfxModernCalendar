@@ -6,7 +6,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/regional-settings/web";
-import { IList, IListInfo } from "@pnp/sp/lists";
+import { IList, IListAddResult, IListInfo } from "@pnp/sp/lists";
 
 import * as moment from 'moment';
 
@@ -21,9 +21,16 @@ export class EventService {
     }
 
     public getDefaultEventsList = async (): Promise<string> => {
-        const list: IList = this._sp.web.lists.getByTitle("Events");
-        const r: IListInfo = await list.select("Id")();
-        return r.Id;
+        const listName: string = "Events";
+        const lists: IList[] = await this._sp.web.lists.filter(`Title eq '${listName}'`)();
+        if (lists.length > 0) {
+            const list: IList = this._sp.web.lists.getByTitle(listName);
+            const listInfo: IListInfo = await list.select("Id")();
+            return listInfo.Id;
+        } else {
+            const listAddResult: IListAddResult = await this._sp.web.lists.add(listName, "", 106, true, { OnQuickLaunch: true });
+            return listAddResult.data.Id;
+        }
     }
 
     public getPrimaryCalendarEvents = async (listId: string, startDate: string, endDate: string): Promise<DisplayEvents[]> => {
