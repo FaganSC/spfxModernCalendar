@@ -14,6 +14,7 @@ import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar
 import { IButtonProps } from '@fluentui/react/lib/Button';
 import { FormType } from '../../../fagansc-spfx-form-elements';
 import FormPanel from './FormPanel/FormPanel';
+import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 
 const localizer: DateLocalizer = momentLocalizer(moment);
 
@@ -39,7 +40,8 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
     this._renderToolbar = this._renderToolbar.bind(this);
 
     moment.locale(props.wpContext.pageContext.cultureInfo.currentUICultureName);
-
+    initializeIcons("https://static2.sharepointonline.com/files/fabric/assets/icons/");
+    
     this.state = {
       events: [],
       dateView: new Date(),
