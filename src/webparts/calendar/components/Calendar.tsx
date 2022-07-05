@@ -232,15 +232,17 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
       }
     ];
 
-    return (<><CommandBar
-      items={_items}
-      overflowItems={_overflowItems}
-      overflowButtonProps={overflowProps}
-      farItems={_getViewSelector()}
-      ariaLabel="Inbox actions"
-      primaryGroupAriaLabel="Email actions"
-      farItemsGroupAriaLabel="More actions"
-    /><h3 className={styles.title}>{calendarProps.label}</h3></>);
+    return (<>
+      <h3 className={styles.title}>{calendarProps.label}</h3>
+      <CommandBar
+        items={_items}
+        overflowItems={_overflowItems}
+        overflowButtonProps={overflowProps}
+        farItems={_getViewSelector()}
+        ariaLabel="Inbox actions"
+        primaryGroupAriaLabel="Email actions"
+        farItemsGroupAriaLabel="More actions"
+      /></>);
   }
 
   private _renderEvent = ({ event }): React.ReactElement<[]> => {
