@@ -1,3 +1,4 @@
 export interface ISPFormState {
-    formElements: any[];
+    formElements: JSX.Element[];
+    isLoading:boolean;
 }

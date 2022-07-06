@@ -51,7 +51,7 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
   public render(): React.ReactElement<IFormPanelProps> {
     const { _onSaveItem, _onEditItem } = this;
     const { formType } = this.state;
-    const { primaryListId, wpContext, isPanelOpen, onTogglePanel } = this.props;
+    const { primaryListId, itemId, wpContext, isPanelOpen, onTogglePanel } = this.props;
     const _items: ICommandBarItemProps[] = [];
     if (formType === FormType.Display) {
       _items.push({
@@ -122,7 +122,7 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
         closeButtonAriaLabel="Close"
         headerText={PanelTitle} >
         <CommandBar items={_items} />
-        <SPForm context={wpContext} listId={primaryListId} formType={FormType.New} />
+        <SPForm wpContext={wpContext} listId={primaryListId} itemId={itemId} formType={FormType.Display} />
       </Panel>
     );
   }

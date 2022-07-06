@@ -4,7 +4,8 @@ module.exports = {
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
     "@microsoft/spfx/no-async-await": "off",
-    "react/jsx-no-bind": "off"
+    "react/jsx-no-bind": "off",
+    "no-async-promise-executor": "off"
   },
   parserOptions: { tsconfigRootDir: __dirname }
 };

@@ -79,7 +79,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   }
 
   private _onSelectEvent = (calEvent): void => {
-    this._onTogglePanel(FormType.Display, calEvent.Id);
+    this._onTogglePanel(FormType.Display, calEvent.id);
   }
 
   private _changeView = (newView: View): void => {
@@ -119,7 +119,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
 
   private _onTogglePanel = (formType: FormType, itemId?: number): void => {
     const { isPanelOpen } = this.state;
-    itemId = itemId === undefined ? itemId : null;
+    itemId = itemId !== undefined ? itemId : null;
     this.setState({ itemId: itemId, formType: formType, isPanelOpen: !isPanelOpen });
   }
 
@@ -314,7 +314,8 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
         <FormPanel
           wpContext={wpContext}
           primaryListId={primaryListId}
-          listId={itemId}
+          listId={primaryListId}
+          itemId={itemId}
           formType={formType}
           isPanelOpen={isPanelOpen}
           onTogglePanel={(viewDisplay) => _onTogglePanel(viewDisplay)} />

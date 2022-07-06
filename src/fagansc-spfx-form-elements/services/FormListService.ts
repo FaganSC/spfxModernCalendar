@@ -11,6 +11,8 @@ import "@pnp/sp/fields/list";
 import { IList } from "@pnp/sp/lists";
 import "@pnp/sp/content-types/list";
 import { IContentType, IContentTypeInfo } from "@pnp/sp/content-types";
+import { FieldDisplay } from "../common/models";
+import { IDropdownOption } from "@fluentui/react/lib/Dropdown";
 
 export class FormListService {
     private _sp: SPFI;
@@ -39,5 +41,44 @@ export class FormListService {
         const contentTypes: IContentTypeInfo[] = await _getListContentTypes(listId);
         const fields: IContentType[] = await _getListContentTypesFields(listId, contentTypes[0].StringId);
         return fields;
+    }
+
+    private _getItemData = async (listId: string, itemId: number): Promise<any[]> => {
+        const results: any = await this._sp.web.lists.getById(listId).items.getById(itemId)();
+        return results;
+    }
+
+    public getItemDisplay = async (listId: string, itemId: number): Promise<FieldDisplay[]> => {
+        const { _getListContentTypes, _getListContentTypesFields, _getItemData } = this;
+        const contentTypes: IContentTypeInfo[] = await _getListContentTypes(listId);
+        const fields: IContentType[] = await _getListContentTypesFields(listId, contentTypes[0].StringId);
+        const data: any[] = await _getItemData(listId, itemId);
+
+        const formFields: FieldDisplay[] = [];
+        fields.map((listField: any) => {
+            if (listField.InternalName !== "ContentType") {
+                formFields.push({
+                    Title: listField.Title,
+                    InternalName: listField.InternalName,
+                    Description: listField.Description,
+                    FieldTypeKind: listField.FieldTypeKind,
+                    Required: listField.Required,
+                    Value: data[listField.InternalName] !== undefined ? data[listField.InternalName] : null
+                });
+            }
+        });
+        return formFields;
+    }
+
+    public getChoiceValues = async (listId: string, internalName: string): Promise<IDropdownOption[]> => {
+        const ddOptions: IDropdownOption[] = [];
+        const choices: any = await this._sp.web.lists.getById(listId).fields.getByInternalNameOrTitle(internalName).select("Choices")();
+        choices.Choices.map((item: any) => {
+            ddOptions.push({
+                key: item,
+                text: item
+            });
+        });
+        return ddOptions;
     }
 }
