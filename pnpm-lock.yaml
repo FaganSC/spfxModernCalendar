@@ -30,6 +30,7 @@ specifiers:
   office-ui-fabric-react: 7.185.7
   react: 16.13.1
   react-big-calendar: ^0.40.2
+  react-device-detect: ^2.2.2
   react-dom: 16.13.1
   react-draft-wysiwyg: ^1.14.7
   react-loading-overlay: ^1.0.1
@@ -71,6 +72,7 @@ devDependencies:
   eslint: 8.7.0
   eslint-plugin-react-hooks: 4.3.0_eslint@8.7.0
   gulp: 4.0.2
+  react-device-detect: 2.2.2_5owmthsvj5ictknaj3ev736ofq
 
 packages:
 
@@ -12838,6 +12840,17 @@ packages:
       uncontrollable: 7.2.1_react@16.13.1
     dev: false
 
+  /react-device-detect/2.2.2_5owmthsvj5ictknaj3ev736ofq:
+    resolution: {integrity: sha512-zSN1gIAztUekp5qUT/ybHwQ9fmOqVT1psxpSlTn1pe0CO+fnJHKRLOWWac5nKxOxvOpD/w84hk1I+EydrJp7SA==}
+    peerDependencies:
+      react: '>= 0.14.0'
+      react-dom: '>= 0.14.0'
+    dependencies:
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+      ua-parser-js: 1.0.2
+    dev: true
+
   /react-dom-factories/1.0.2:
     resolution: {integrity: sha512-Bmic2N3oKji7vw9qjDr2dmwHvOATbFSnKy7EH0uT/qjvzIUsiXp6Yquk72LJ3WfMtRnq3ujXMMo7GsJeLPfFWw==}
     dev: false
@@ -12852,7 +12865,6 @@ packages:
       prop-types: 15.8.1
       react: 16.13.1
       scheduler: 0.19.1
-    dev: false
 
   /react-draft-wysiwyg/1.14.7_fsmbuuhugeskmpj2voueumyv6m:
     resolution: {integrity: sha512-D4X8F/ourvQZuqHzCQ6Vs6Tnt6TbGH58kvHQxC+aZGq+45ko2EyatL6G5C/paMaNKDZq2JRe7yAzykneMLpNOg==}
@@ -12988,7 +13000,6 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       prop-types: 15.8.1
-    dev: false
 
   /read-package-json/2.1.2:
     resolution: {integrity: sha512-D1KmuLQr6ZSJS0tW8hf3WGpRlwszJOXZ3E8Yd/DNRaM5d+1wVRZdHlpGBLAuovjr28LbWvjpWkBHMxpRGGjzNA==}
@@ -13591,7 +13602,6 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-    dev: false
 
   /schema-utils/0.4.7:
     resolution: {integrity: sha512-v/iwU6wvwGK8HbU9yi3/nhGzP0yGSuhQMzL6ySiec1FSrZZDkhm4noOSWzrNFo/jEc+SJY6jRTwuwbSXJPDUnQ==}
@@ -15029,6 +15039,10 @@ packages:
   /ua-parser-js/0.7.31:
     resolution: {integrity: sha512-qLK/Xe9E2uzmYI3qLeOmI0tEOt+TBBQyUIAh4aAgU05FVYzeZrKUdkAZfBNVGRaHVgV0TDkdEngJSw/SyQchkQ==}
     dev: false
+
+  /ua-parser-js/1.0.2:
+    resolution: {integrity: sha512-00y/AXhx0/SsnI51fTc0rLRmafiGOM4/O+ny10Ps7f+j/b8p/ZY11ytMgznXkOVo4GQ+KwQG5UQLkLGirsACRg==}
+    dev: true
 
   /uc.micro/1.0.6:
     resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}

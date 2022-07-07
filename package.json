@@ -7,7 +7,8 @@
     "build": "gulp bundle",
     "clean": "gulp clean",
     "test": "gulp test",
-    "serve": "gulp serve-deprecated --nobrowser"
+    "serve": "gulp serve-deprecated --nobrowser",
+    "publish": "gulp clean && gulp build --ship && gulp bundle --ship && gulp package-solution --ship"
   },
   "dependencies": {
     "@fluentui/react": "^8.77.3",
@@ -44,6 +45,7 @@
     "ajv": "6.12.5",
     "eslint": "8.7.0",
     "eslint-plugin-react-hooks": "4.3.0",
-    "gulp": "~4.0.2"
+    "gulp": "~4.0.2",
+    "react-device-detect": "^2.2.2"
   }
 }

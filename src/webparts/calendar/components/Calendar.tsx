@@ -5,7 +5,7 @@ import { ICalendarState } from './ICalendarState';
 import * as strings from 'CalendarWebPartStrings';
 import * as moment from 'moment';
 import LoadingOverlay from 'react-loading-overlay';
-import { Calendar as SPCalendar, DateLocalizer, momentLocalizer, View } from 'react-big-calendar';
+import { Calendar as SPCalendar, DateLocalizer, momentLocalizer, View, Views } from 'react-big-calendar';
 import { Views as CalendarViews } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { EventService } from '../services/EventsService';
@@ -15,6 +15,7 @@ import { IButtonProps } from '@fluentui/react/lib/Button';
 import { FormType } from '../../../fagansc-spfx-form-elements';
 import FormPanel from './FormPanel/FormPanel';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
+import { isMobile } from "react-device-detect";
 
 const localizer: DateLocalizer = momentLocalizer(moment);
 
@@ -41,11 +42,11 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
 
     moment.locale(props.wpContext.pageContext.cultureInfo.currentUICultureName);
     initializeIcons("https://static2.sharepointonline.com/files/fabric/assets/icons/");
-    
+
     this.state = {
       events: [],
       dateView: new Date(),
-      currentView: this.props.defaultView,
+      currentView: isMobile ? Views.DAY : this.props.defaultView,
       isLoading: true,
       isPanelOpen: false,
       formElements: [],
