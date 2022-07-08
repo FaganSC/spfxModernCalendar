@@ -7,13 +7,13 @@ export class FieldActions {
     }
 
     public isRequired(): boolean {
-        const { Required } = this.props;
-        if (Required !== undefined) {
-            if (typeof (Required) === 'boolean') {
-                return Required;
+        const { isRequired } = this.props;
+        if (isRequired !== undefined) {
+            if (typeof (isRequired) === 'boolean') {
+                return isRequired;
             } else {
                 let returnValue: boolean = false;
-                Required.map(async (field: string) => {
+                isRequired.map(async (field: string) => {
                     if (field === this.props.FieldName) {
                         returnValue = true;
                     }
@@ -26,27 +26,27 @@ export class FieldActions {
     }
 
     public isDisabled(): boolean {
-        const { Disabled } = this.props;
-        if (Disabled !== undefined) {
-            return Disabled;
+        const { isDisabled } = this.props;
+        if (isDisabled !== undefined) {
+            return isDisabled;
         } else {
             return false;
         }
     }
 
     public isReadOnly(): boolean {
-        const { ReadOnly } = this.props;
-        if (ReadOnly !== undefined) {
-            return ReadOnly;
+        const { isReadOnly } = this.props;
+        if (isReadOnly !== undefined) {
+            return isReadOnly;
         } else {
             return false;
         }
     }
 
     public isMultiSelect(): boolean {
-        const { MultiSelect } = this.props;
-        if (MultiSelect !== undefined) {
-            return MultiSelect;
+        const { isMultiSelect } = this.props;
+        if (isMultiSelect !== undefined) {
+            return isMultiSelect;
         } else {
             return false;
         }
@@ -54,9 +54,9 @@ export class FieldActions {
 
 
     public getDecimalScale(): number {
-        const { DecimalScale} = this.props;
-        if (DecimalScale !== undefined) {
-            return DecimalScale;
+        const { decimalScale} = this.props;
+        if (decimalScale !== undefined) {
+            return decimalScale;
         } else {
             return 0;
         }
@@ -72,40 +72,40 @@ export class FieldActions {
     }
 
     public getClassNames(addedClass?: string): string {
-        const { ClassName } = this.props;
+        const { className } = this.props;
         if (addedClass !== undefined) {
-            if (Array.isArray(ClassName)) {
-                const classes: string[] = ClassName;
+            if (Array.isArray(className)) {
+                const classes: string[] = className;
                 classes.push(addedClass);
                 return classes.join(' ');
             } else {
                 const classes: string[] = [];
-                classes.push(ClassName);
+                classes.push(className);
                 classes.push(addedClass);
                 return classes.join(' ');
             }
         } else {
-            if (Array.isArray(ClassName)) {
-                return ClassName.join(' ');
+            if (Array.isArray(className)) {
+                return className.join(' ');
             } else {
-                return ClassName;
+                return className;
             }
         }
     }
 
     public hasIcon(): boolean {
-        const { UseIcon } = this.props;
-        if (UseIcon !== undefined) {
-            return UseIcon;
+        const { useIcon } = this.props;
+        if (useIcon !== undefined) {
+            return useIcon;
         } else {
             return false;
         }
     }
 
     public hasTipTool(): string {
-        const { TipTool } = this.props;
-        if (TipTool !== undefined) {
-            return TipTool;
+        const { useTipTool } = this.props;
+        if (useTipTool !== undefined) {
+            return useTipTool;
         } else {
             return null;
         }
