@@ -58,12 +58,12 @@ export class FormListService {
         fields.map((listField: any) => {
             if (listField.InternalName !== "ContentType") {
                 formFields.push({
-                    Title: listField.Title,
-                    InternalName: listField.InternalName,
-                    Description: listField.Description,
-                    FieldTypeKind: listField.FieldTypeKind,
-                    Required: listField.Required,
-                    Value: data[listField.InternalName] !== undefined ? data[listField.InternalName] : null
+                    title: listField.Title,
+                    internalName: listField.InternalName,
+                    description: listField.Description,
+                    fieldTypeKind: listField.FieldTypeKind,
+                    required: listField.Required,
+                    value: data[listField.InternalName] !== undefined ? data[listField.InternalName] : null
                 });
             }
         });
@@ -72,7 +72,7 @@ export class FormListService {
 
     public getChoiceValues = async (listId: string, internalName: string): Promise<IDropdownOption[]> => {
         const ddOptions: IDropdownOption[] = [];
-        const choices: any = await this._sp.web.lists.getById(listId).fields.getByInternalNameOrTitle(internalName).select("Choices")();
+        const choices: any = await this._sp.web.lists.getById(listId).fields.getByInternalNameOrTitle(internalName).select("DefaultValue","Choices","FillInChoice","SchemaXml")();
         choices.Choices.map((item: any) => {
             ddOptions.push({
                 key: item,

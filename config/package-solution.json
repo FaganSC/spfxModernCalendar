@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "modern-calendar-client-side-solution",
+    "name": "SharePoint Modern Calendar by Shawn Fagan",
     "id": "13938adf-d569-44ac-8ddf-bf541b851ddb",
-    "version": "1.0.0.0",
+    "version": "0.0.0.5",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
@@ -35,6 +35,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/modern-calendar.sppkg"
+    "zippedPackage": "solution/fagansc-sp-modern-calendar.sppkg"
   }
 }

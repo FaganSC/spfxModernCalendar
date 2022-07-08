@@ -12,8 +12,8 @@ import { EventService } from '../services/EventsService';
 import { DisplayEvents } from '../models/dataModels';
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
 import { IButtonProps } from '@fluentui/react/lib/Button';
-import { FormType } from '../../../fagansc-spfx-form-elements';
-import FormPanel from './FormPanel/FormPanel';
+import { FormType } from '../../../fagansc-spfx-form';
+import FormPanel from './FormPanel';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { isMobile } from "react-device-detect";
 
