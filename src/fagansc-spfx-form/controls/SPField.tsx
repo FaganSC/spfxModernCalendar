@@ -80,7 +80,7 @@ export class SPField extends React.Component<ISPFieldProps, ISPFieldState> {
         return choiceOptions;
     }
 
-    private _getCurrentValue = (defaultValue: string | number ): string | number => {
+    private _getCurrentValue = (defaultValue: string | number): string | number => {
         const { currentValue } = this.state;
         if (defaultValue === undefined && currentValue === null) {
             return null;
@@ -97,32 +97,35 @@ export class SPField extends React.Component<ISPFieldProps, ISPFieldState> {
     }
 
     public render = (): JSX.Element => {
-        const { fieldIcons, title, fieldTypeKind, internalName, required, value, description } = this.props;
+        const { fieldIcons, title, fieldTypeKind, internalName, required, value, description, formType } = this.props;
         const useFieldIcons: boolean = fieldIcons === undefined ? false : fieldIcons;
         switch (fieldTypeKind) {
             case 2: //FieldType: Text
                 return (<SPTextBoxField
-                     label={title}
-                     internalName={internalName}
-                     isRequired={required}
-                     value={this._getCurrentValue(value)}
-                     useTipTool={description}
-                     useIcon={useFieldIcons}
-                     onChanged={(value) => this._onFieldChange(value)} />)
-            case 3: //FieldType: Note
-                return (<SPNoteField 
                     label={title}
                     internalName={internalName}
                     isRequired={required}
+                    isReadOnly={formType === FormType.Display ? true : false}
+                    value={this._getCurrentValue(value)}
+                    useTipTool={description}
+                    useIcon={useFieldIcons}
+                    onChanged={(value) => this._onFieldChange(value)} />)
+            case 3: //FieldType: Note
+                return (<SPNoteField
+                    label={title}
+                    internalName={internalName}
+                    isRequired={required}
+                    isReadOnly={formType === FormType.Display ? true : false}
                     value={this._getCurrentValue(value)}
                     useTipTool={description}
                     useIcon={useFieldIcons}
                     onChanged={(value) => this._onFieldChange(value)} />)
             case 4: //FieldType: DateTime
-                return (<SPDateTimeField 
+                return (<SPDateTimeField
                     label={title}
                     internalName={internalName}
                     isRequired={required}
+                    isReadOnly={formType === FormType.Display ? true : false}
                     value={this._getCurrentValue(value)}
                     useTipTool={description}
                     useIcon={useFieldIcons}
@@ -132,6 +135,7 @@ export class SPField extends React.Component<ISPFieldProps, ISPFieldState> {
                     label={title}
                     internalName={internalName}
                     isRequired={required}
+                    isReadOnly={formType === FormType.Display ? true : false}
                     value={this._getCurrentValue(value)}
                     options={this.state.choiceOptions}
                     useTipTool={description}
@@ -144,6 +148,7 @@ export class SPField extends React.Component<ISPFieldProps, ISPFieldState> {
                     label={title}
                     internalName={internalName}
                     isRequired={required}
+                    isReadOnly={formType === FormType.Display ? true : false}
                     value={this._getCurrentValue(value)}
                     useTipTool={description}
                     useIcon={useFieldIcons}

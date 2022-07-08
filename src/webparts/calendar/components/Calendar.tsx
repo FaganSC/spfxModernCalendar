@@ -12,10 +12,9 @@ import { EventService } from '../services/EventsService';
 import { DisplayEvents } from '../models/dataModels';
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
 import { IButtonProps } from '@fluentui/react/lib/Button';
-import { FormType } from '../../../fagansc-spfx-form';
-import FormPanel from './FormPanel';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { isMobile } from "react-device-detect";
+import SPFormPanel from '../../../fagansc-spfx-form/controls/SPFormPanel';
 
 const localizer: DateLocalizer = momentLocalizer(moment);
 
@@ -50,8 +49,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
       isLoading: true,
       isPanelOpen: false,
       formElements: [],
-      itemId: null,
-      formType: FormType.Display
+      itemId: null
     };
   }
 
@@ -80,7 +78,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   }
 
   private _onSelectEvent = (calEvent): void => {
-    this._onTogglePanel(FormType.Display, calEvent.id);
+    this._onTogglePanel(calEvent.id);
   }
 
   private _changeView = (newView: View): void => {
@@ -118,10 +116,13 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
     this._getPrimaryCalendarEvents(newDateView).catch(error => console.error("Oh no!", error));
   }
 
-  private _onTogglePanel = (formType: FormType, itemId?: number): void => {
+  private _onTogglePanel = (itemId?: number): void => {
     const { isPanelOpen } = this.state;
+    if(isPanelOpen){
+      this._getPrimaryCalendarEvents().catch(error => console.error("Oh no!", error));
+    }
     itemId = itemId !== undefined ? itemId : null;
-    this.setState({ itemId: itemId, formType: formType, isPanelOpen: !isPanelOpen });
+    this.setState({ itemId: itemId, isPanelOpen: !isPanelOpen });
   }
 
   /**
@@ -204,7 +205,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
               key: 'calendarEvent',
               text: strings.lblNewCalendarEvent,
               iconProps: { iconName: 'Calendar' },
-              onClick: () => _onTogglePanel(FormType.New)
+              onClick: () => _onTogglePanel()
             },
           ],
         },
@@ -226,13 +227,13 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
         text: strings.lblNext,
         iconProps: { iconName: 'NavigateBackMirrored' },
         onClick: () => _changeDate('NavigateForward'),
-      },
+      }/*,
       {
         key: 'share',
         text: strings.lblShare,
         iconProps: { iconName: 'Share' },
         onClick: () => console.log('Share'),
-      }
+      }*/
     ];
 
     return (<>
@@ -269,7 +270,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
 
   public render(): React.ReactElement<ICalendarProps> {
     const { _renderEvent, _renderToolbar, _onTogglePanel } = this;
-    const { events, dateView, currentView, isLoading, isPanelOpen, itemId, formType } = this.state;
+    const { events, dateView, currentView, isLoading, isPanelOpen, itemId } = this.state;
     const { wpContext, hasTeamsContext, primaryListId } = this.props;
 
     return (
@@ -312,14 +313,13 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
             }
           />
         </LoadingOverlay>
-        <FormPanel
+        <SPFormPanel
           wpContext={wpContext}
           primaryListId={primaryListId}
           listId={primaryListId}
           itemId={itemId}
-          formType={formType}
           isPanelOpen={isPanelOpen}
-          onTogglePanel={(viewDisplay) => _onTogglePanel(viewDisplay)} />
+          onTogglePanel={() => _onTogglePanel()} />
       </section >
     );
   }

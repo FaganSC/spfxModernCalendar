@@ -61,6 +61,26 @@ export class FormListService {
         return ddOptions;
     }
 
+    public getNewFormDisplay = async (listId: string): Promise<FieldDisplay[]> => {
+        const { _getListContentTypes, _getListContentTypesFields } = this;
+        const contentTypes: IContentTypeInfo[] = await _getListContentTypes(listId);
+        const fields: IContentType[] = await _getListContentTypesFields(listId, contentTypes[0].StringId);
+        const formFields: FieldDisplay[] = [];
+        fields.map((listField: any) => {
+            if (listField.InternalName !== "ContentType") {
+                formFields.push({
+                    title: listField.Title,
+                    internalName: listField.InternalName,
+                    description: listField.Description,
+                    fieldTypeKind: listField.FieldTypeKind,
+                    required: listField.Required,
+                    value: null
+                });
+            }
+        });
+        return formFields;
+    }
+
     public getItemDisplay = async (listId: string, itemId: number): Promise<FieldDisplay[]> => {
         const { _getListContentTypes, _getListContentTypesFields, _getItemData } = this;
         const contentTypes: IContentTypeInfo[] = await _getListContentTypes(listId);
@@ -94,7 +114,7 @@ export class FormListService {
     }
 
     public deleteItem = async (itemId:number): Promise<void> => {
-        const results: any = await this._sp.web.lists.getById(this._listId).items.getById(itemId).delete();
+        const results: any = await this._sp.web.lists.getById(this._listId).items.getById(itemId).recycle();
         return results;
     }
 }

@@ -1,4 +1,5 @@
 export * from './SPForm';
+export * from './SPFormPanel';
 export * from './SPField';
 export * from './SPTextBoxField';
 export * from "./SPNoteField";

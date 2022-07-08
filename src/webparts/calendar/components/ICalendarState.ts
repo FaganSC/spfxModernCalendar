@@ -1,5 +1,4 @@
 import { View } from "react-big-calendar";
-import { FormType } from "../../../fagansc-spfx-form";
 
 export interface ICalendarState {
   events: any[];
@@ -9,5 +8,4 @@ export interface ICalendarState {
   isPanelOpen: boolean;
   formElements: any;
   itemId: number;
-  formType: FormType;
 }

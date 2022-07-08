@@ -51,14 +51,11 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
         const { listId, itemId, formType } = this.props;
         switch (formType) {
             case FormType.New:
-                _formListService.getListContext(listId)
-                    .then((data: any) => {
-                        console.log(data);
-                        //this.setState({ formElements: data, isLoading: false });
+                _formListService.getNewFormDisplay(listId)
+                    .then(async (data: FieldDisplay[]) => {
+                        this.setState({ formSturcture: data, isLoading: false });
                     })
                     .catch(error => console.error("Oh no!", error));
-                break;
-            case FormType.Edit:
                 break;
             default:
                 _formListService.getItemDisplay(listId, itemId)
@@ -85,16 +82,22 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
     }
 
     private _onSave = async (): Promise<any> => {
-        const {itemId} = this.props;
+        const { itemId } = this.props;
         const { formData } = this.state;
-        const temp: any = await this._formListService.updateItem(itemId, formData);
-        console.log(temp);
+        if (itemId) {
+            const temp: any = await this._formListService.updateItem(itemId, formData);
+            console.log(temp);
+        } else {
+            const temp: any = await this._formListService.addItem(formData);
+            console.log(temp);
+        }
         this.props.onSave();
     }
 
     public render = (): JSX.Element => {
         const { formSturcture } = this.state;
-        const { wpContext, listId } = this.props;
+        const { wpContext, listId, formType } = this.props;
+        console.log(formType);
         return (
             <section>
                 {formSturcture.length === 0 ?
@@ -105,6 +108,7 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
                                 {...p}
                                 wpContext={wpContext}
                                 listId={listId}
+                                formType={formType}
                                 onChanged={(internalName, value) => this._onFieldChange(internalName, value)} />;
                         })}
                         <Stack /*className={styles.buttons}*/ horizontal /*tokens={stackTokens}*/>
