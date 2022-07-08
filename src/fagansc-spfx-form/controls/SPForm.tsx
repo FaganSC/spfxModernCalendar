@@ -111,10 +111,13 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
                                 formType={formType}
                                 onChanged={(internalName, value) => this._onFieldChange(internalName, value)} />;
                         })}
-                        <Stack /*className={styles.buttons}*/ horizontal /*tokens={stackTokens}*/>
-                            <PrimaryButton /*disabled={isSaving}*/ text={strings.FormSave} onClick={() => this._onSave()} />
-                            <DefaultButton /*disabled={isSaving}*/ text={strings.FormCancel} onClick={() => this.props.onCancel()} />
-                        </Stack></>}
+                        {formType !== FormType.Display &&
+                            <Stack /*className={styles.buttons}*/ horizontal /*tokens={stackTokens}*/>
+                                <PrimaryButton /*disabled={isSaving}*/ text={strings.FormSave} onClick={() => this._onSave()} />
+                                <DefaultButton /*disabled={isSaving}*/ text={strings.FormCancel} onClick={() => this.props.onCancel()} />
+                            </Stack>}
+                    </>
+                }
             </section>
         );
     }
