@@ -8,7 +8,7 @@ import "@pnp/sp/items";
 import "@pnp/sp/regional-settings/web";
 import "@pnp/sp/fields/list";
 
-import { IList } from "@pnp/sp/lists";
+import { IList, IListUpdateResult } from "@pnp/sp/lists";
 import "@pnp/sp/content-types/list";
 import { IContentType, IContentTypeInfo } from "@pnp/sp/content-types";
 import { FieldDisplay } from "../common/models";
@@ -16,10 +16,11 @@ import { IDropdownOption } from "@fluentui/react/lib/Dropdown";
 
 export class FormListService {
     private _sp: SPFI;
-
-    public constructor(webPartContext: WebPartContext) {
+    private _listId: string;
+    public constructor(webPartContext: WebPartContext, listId?: string) {
         const pageContext: PageContext = webPartContext.pageContext;
         this._sp = spfi().using(SPFx({ pageContext }));
+        this._listId = listId;
     }
 
     private _getListContentTypes = async (listId: string): Promise<IContentTypeInfo[]> => {
@@ -48,6 +49,18 @@ export class FormListService {
         return results;
     }
 
+    public getChoiceValues = async (listId: string, internalName: string): Promise<IDropdownOption[]> => {
+        const ddOptions: IDropdownOption[] = [];
+        const choices: any = await this._sp.web.lists.getById(listId).fields.getByInternalNameOrTitle(internalName).select("DefaultValue", "Choices", "FillInChoice", "SchemaXml")();
+        choices.Choices.map((item: any) => {
+            ddOptions.push({
+                key: item,
+                text: item
+            });
+        });
+        return ddOptions;
+    }
+
     public getItemDisplay = async (listId: string, itemId: number): Promise<FieldDisplay[]> => {
         const { _getListContentTypes, _getListContentTypesFields, _getItemData } = this;
         const contentTypes: IContentTypeInfo[] = await _getListContentTypes(listId);
@@ -70,15 +83,18 @@ export class FormListService {
         return formFields;
     }
 
-    public getChoiceValues = async (listId: string, internalName: string): Promise<IDropdownOption[]> => {
-        const ddOptions: IDropdownOption[] = [];
-        const choices: any = await this._sp.web.lists.getById(listId).fields.getByInternalNameOrTitle(internalName).select("DefaultValue","Choices","FillInChoice","SchemaXml")();
-        choices.Choices.map((item: any) => {
-            ddOptions.push({
-                key: item,
-                text: item
-            });
-        });
-        return ddOptions;
+    public addItem = async (listData: any): Promise<void> => {
+        const results: any = await this._sp.web.lists.getById(this._listId).items.add({...listData});
+        return results;
+    }
+
+    public updateItem = async (itemId:number, listData: any): Promise<IListUpdateResult> => {
+        const results: any = await this._sp.web.lists.getById(this._listId).items.getById(itemId).update({...listData});
+        return results;
+    }
+
+    public deleteItem = async (itemId:number): Promise<void> => {
+        const results: any = await this._sp.web.lists.getById(this._listId).items.getById(itemId).delete();
+        return results;
     }
 }

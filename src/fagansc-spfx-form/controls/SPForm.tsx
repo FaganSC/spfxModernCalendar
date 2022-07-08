@@ -35,8 +35,9 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
     private _formListService: FormListService;
     public constructor(props: ISPFormProps) {
         super(props);
-        this._formListService = new FormListService(props.wpContext);
+        this._formListService = new FormListService(props.wpContext, props.listId);
         this._onFieldChange = this._onFieldChange.bind(this);
+        this._onSave = this._onSave.bind(this);
         this.state = {
             formSturcture: [],
             formData: [],
@@ -81,7 +82,14 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
 
         data[internalName] = changedValue;
         this.setState({ formData: data, formSturcture: form });
-        console.log(data);
+    }
+
+    private _onSave = async (): Promise<any> => {
+        const {itemId} = this.props;
+        const { formData } = this.state;
+        const temp: any = await this._formListService.updateItem(itemId, formData);
+        console.log(temp);
+        this.props.onSave();
     }
 
     public render = (): JSX.Element => {
@@ -100,7 +108,7 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
                                 onChanged={(internalName, value) => this._onFieldChange(internalName, value)} />;
                         })}
                         <Stack /*className={styles.buttons}*/ horizontal /*tokens={stackTokens}*/>
-                            <PrimaryButton /*disabled={isSaving}*/ text={strings.FormSave} onClick={() => this.props.onSave()} />
+                            <PrimaryButton /*disabled={isSaving}*/ text={strings.FormSave} onClick={() => this._onSave()} />
                             <DefaultButton /*disabled={isSaving}*/ text={strings.FormCancel} onClick={() => this.props.onCancel()} />
                         </Stack></>}
             </section>

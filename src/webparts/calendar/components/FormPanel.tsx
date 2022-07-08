@@ -7,6 +7,7 @@ import { Panel, PanelType } from '@fluentui/react/lib/Panel';
 import { SPForm } from '../../../fagansc-spfx-form/controls/SPForm';
 import { FormType } from '../../../fagansc-spfx-form';
 import { WebPartContext } from "@microsoft/sp-webpart-base";
+import { MessageBar, MessageBarType } from '@fluentui/react/lib/components/MessageBar';
 
 export interface IFormPanelProps {
   wpContext: WebPartContext;
@@ -18,7 +19,9 @@ export interface IFormPanelProps {
   formType: FormType
 }
 
-export interface IFormPanelState {}
+export interface IFormPanelState {
+  isMessageBarOpen: boolean;
+}
 
 export default class FormPanel extends React.Component<IFormPanelProps, IFormPanelState> {
   public constructor(props: IFormPanelProps) {
@@ -26,34 +29,38 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
     this._onSaveItem = this._onSaveItem.bind(this);
     this._onEditItem = this._onEditItem.bind(this);
     this.state = {
-      formType: props.formType
+      isMessageBarOpen: false
     };
   }
 
   private _onSaveItem = (): void => {
-    alert('Save Item');
-    this.props.onTogglePanel();
+    this.setState({ isMessageBarOpen: true });
+    setTimeout(function () {
+      this.setState({ isMessageBarOpen: false });
+      this.props.onTogglePanel();
+    }.bind(this), 3000);
   }
 
   private _onEditItem = (): void => {
-    this.setState({ formType: FormType.Edit });
+    //this.setState({ formType: FormType.Edit });
   }
 
   public componentDidUpdate = (prevProps: IFormPanelProps): void => {
     const { formType } = this.props;
     if (prevProps.formType !== formType) {
-      this.setState({ formType: formType });
+      //this.setState({ formType: formType });
     }
   }
 
   /**
  * Handles component mount lifecycle method.
  */
-  public componentDidMount = async (): Promise<void> => {}
+  public componentDidMount = async (): Promise<void> => { }
 
   public render(): React.ReactElement<IFormPanelProps> {
     const { _onSaveItem, _onEditItem } = this;
     const { isPanelOpen, formType, primaryListId, itemId, wpContext, onTogglePanel } = this.props;
+    const { isMessageBarOpen } = this.state;
     const _items: ICommandBarItemProps[] = [];
     if (formType === FormType.Display) {
       _items.push({
@@ -124,6 +131,7 @@ export default class FormPanel extends React.Component<IFormPanelProps, IFormPan
         closeButtonAriaLabel="Close"
         headerText={PanelTitle} >
         <CommandBar items={_items} />
+        {isMessageBarOpen && <MessageBar messageBarType={MessageBarType.success} isMultiline={false} dismissButtonAriaLabel="Close">Item Saved</MessageBar>}
         <SPForm
           wpContext={wpContext}
           listId={primaryListId}
