@@ -118,7 +118,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
 
   private _onTogglePanel = (itemId?: number): void => {
     const { isPanelOpen } = this.state;
-    if(isPanelOpen){
+    if (isPanelOpen) {
       this._getPrimaryCalendarEvents().catch(error => console.error("Oh no!", error));
     }
     itemId = itemId !== undefined ? itemId : null;
@@ -191,8 +191,8 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   }
 
   private _renderToolbar = (calendarProps: any): React.ReactElement<[]> => {
+    const { wpContext } = this.props;
     const { _getViewSelector, _changeDate, _onTogglePanel } = this;
-
     const _items: ICommandBarItemProps[] = [
       {
         key: 'newItem',
@@ -235,18 +235,33 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
         onClick: () => console.log('Share'),
       }*/
     ];
-
-    return (<>
-      <h3 className={styles.title}>{calendarProps.label}</h3>
-      <CommandBar
-        items={_items}
-        overflowItems={_overflowItems}
-        overflowButtonProps={overflowProps}
-        farItems={_getViewSelector()}
-        ariaLabel="Inbox actions"
-        primaryGroupAriaLabel="Email actions"
-        farItemsGroupAriaLabel="More actions"
-      /></>);
+    if (wpContext.sdks.microsoftTeams) {
+      return (<>
+        <CommandBar
+          items={_items}
+          overflowItems={_overflowItems}
+          overflowButtonProps={overflowProps}
+          farItems={_getViewSelector()}
+          ariaLabel="Inbox actions"
+          primaryGroupAriaLabel="Email actions"
+          farItemsGroupAriaLabel="More actions"
+        />
+        <h3 className={styles.title}>{calendarProps.label}</h3>
+      </>);
+    } else {
+      return (<>
+        <h3 className={styles.title}>{calendarProps.label}</h3>
+        <CommandBar
+          items={_items}
+          overflowItems={_overflowItems}
+          overflowButtonProps={overflowProps}
+          farItems={_getViewSelector()}
+          ariaLabel="Inbox actions"
+          primaryGroupAriaLabel="Email actions"
+          farItemsGroupAriaLabel="More actions"
+        />
+        </>);
+    }
   }
 
   private _renderEvent = ({ event }): React.ReactElement<[]> => {
