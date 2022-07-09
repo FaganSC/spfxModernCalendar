@@ -79,11 +79,6 @@ export default class SPFormPanel extends React.Component<IFormPanelProps, IFormP
     }
   }
 
-  /**
- * Handles component mount lifecycle method.
- */
-  public componentDidMount = async (): Promise<void> => { console.log(this.state.formType); }
-
   public render(): React.ReactElement<IFormPanelProps> {
     const { _onSaveItem, _onEditItem, _onDeleteItem } = this;
     const { isPanelOpen, primaryListId, itemId, wpContext, onTogglePanel } = this.props;
