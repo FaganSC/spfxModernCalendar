@@ -28,7 +28,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
   public constructor(props: ICalendarProps) {
     super(props);
     this._eventService = new EventService(props.wpContext);
-
+    console.log(props.wpContext);
     this._getPrimaryCalendarEvents = this._getPrimaryCalendarEvents.bind(this);
 
     this._onSelectEvent = this._onSelectEvent.bind(this);
