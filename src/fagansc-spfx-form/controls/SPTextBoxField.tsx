@@ -20,37 +20,36 @@ export interface ISPTextBoxFieldProps {
     onChanged?: any;
 }
 
-export interface ISPTextBoxFieldState {}
+export interface ISPTextBoxFieldState {
+    value: string;
+}
 
 export class SPTextBoxField extends React.Component<ISPTextBoxFieldProps, ISPTextBoxFieldState> {
     public constructor(props: ISPTextBoxFieldProps) {
         super(props);
-        this._handleDataFormat = this._handleDataFormat.bind(this);
+        this._handleOnBlur = this._handleOnBlur.bind(this);
         this._handleOnChange = this._handleOnChange.bind(this);
         this.state = {
-            FieldsValue: this._handleDataFormat(props.value)
-        };
-    }
-
-    private _handleDataFormat = (value: string | number): string => {
-        return value === undefined || value === null ? null : value.toString();
-    }
-
-    private _handleOnChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newTextValue?: string): void => {
-        const { value } = this.props;
-        if (this.props.onChanged !== undefined) {
-            if (value !== newTextValue) {
-                if (!newTextValue) {
-                    this.props.onChanged(null);
-                } else {
-                    this.props.onChanged(newTextValue);
-                }
-            }
+            value: props.value
         }
     }
 
+    private _handleOnChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newTextValue?: string): void => {
+        if(newTextValue===''){
+            this.setState({ value: null });
+        } else {
+            this.setState({ value: newTextValue });
+        }
+    }
+
+    private _handleOnBlur = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>):void =>{
+        const { value } = this.state;
+        this.props.onChanged(value);
+    }
+
     public render(): JSX.Element {
-        const { label, value, isReadOnly } = this.props;
+        const { value } = this.state;
+        const { label, isReadOnly } = this.props;
         const iconProps: IIconProps = isReadOnly ? { iconName: 'Lock' } : null;
         const _fieldActions: FieldActions = new FieldActions(this.props);
         return (
@@ -69,6 +68,7 @@ export class SPTextBoxField extends React.Component<ISPTextBoxFieldProps, ISPTex
                     value={value}
                     iconProps={iconProps}
                     errorMessage={_fieldActions.getErrorMessage()}
+                    onBlur={(event) => this._handleOnBlur(event)}
                     onChange={(event, value) => this._handleOnChange(event, value)} />
             </div>
         );
