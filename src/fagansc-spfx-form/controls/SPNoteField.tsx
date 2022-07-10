@@ -4,7 +4,6 @@ import styles from '../common/FormFields.module.scss';
 import { FieldActions, FieldLabel } from "../common";
 
 import { TextField } from '@fluentui/react/lib/TextField';
-import { IIconProps } from 'office-ui-fabric-react/lib/Icon';
 
 export interface ISPNoteFieldProps {
     label: string;
@@ -21,7 +20,7 @@ export interface ISPNoteFieldProps {
     onChanged?: any;
 }
 
-export interface ISPNoteFieldState {}
+export interface ISPNoteFieldState { }
 
 export class SPNoteField extends React.Component<ISPNoteFieldProps, ISPNoteFieldState> {
     public constructor(props: ISPNoteFieldProps) {
@@ -48,8 +47,7 @@ export class SPNoteField extends React.Component<ISPNoteFieldProps, ISPNoteField
     }
 
     public render(): JSX.Element {
-        const { label, value, isReadOnly } = this.props;
-        const iconProps: IIconProps = isReadOnly ? { iconName: 'Lock' } : null;
+        const { label, value } = this.props;
         const _fieldActions: FieldActions = new FieldActions(this.props);
         return (
             <div className={styles.fieldContainer}>
@@ -57,16 +55,16 @@ export class SPNoteField extends React.Component<ISPNoteFieldProps, ISPNoteField
                     Label={label}
                     Required={_fieldActions.isRequired()}
                     UseIcon={_fieldActions.hasIcon()}
-                    TipTool={_fieldActions.hasTipTool()}
+                    TipTool={_fieldActions.isReadOnly() && _fieldActions.hasTipTool()}
                     IconName="TextField"
                 />
                 <TextField
                     readOnly={_fieldActions.isReadOnly()}
                     disabled={_fieldActions.isDisabled()}
-                    className={_fieldActions.getClassNames()}
+                    className={_fieldActions.getClassNames(_fieldActions.isReadOnly() && styles.spFieldReadOnly)}
                     multiline={true}
+                    resizable={_fieldActions.isReadOnly() ? false : true}
                     value={this._handleDataFormat(value)}
-                    iconProps={iconProps}
                     errorMessage={_fieldActions.getErrorMessage()}
                     onChange={(event, value) => this._handleOnChange(event, value)} />
             </div>

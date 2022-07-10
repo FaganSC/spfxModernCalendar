@@ -78,6 +78,13 @@
     padding: 20px 24px;
 }
 
+.spFieldReadOnly{
+    div {
+        div {
+            border: none !important;
+        }
+    }
+}
 .spfxTextField {
     font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto,
         "Helvetica Neue", sans-serif;
@@ -89,7 +96,6 @@
     padding: 0px;
     box-sizing: border-box;
     position: relative;
-
     .wrapper {
         .fieldGroup {
             box-shadow: none;
@@ -162,18 +168,22 @@
 .SPDateTimeField {
     .DateTimePicker {
         display: flex;
+
         .DatePicker {
             width: 50%;
         }
+
         &.DateOnly {
             .DatePicker {
                 width: 100%;
             }
         }
+
         .HourPicker {
             width: 25%;
             margin: 0 5px;
         }
+
         .MinutePicker {
             width: 25%;
         }

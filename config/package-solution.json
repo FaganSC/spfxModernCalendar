@@ -3,7 +3,7 @@
   "solution": {
     "name": "SharePoint Modern Calendar by Shawn Fagan",
     "id": "13938adf-d569-44ac-8ddf-bf541b851ddb",
-    "version": "0.0.0.7",
+    "version": "0.0.0.11",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

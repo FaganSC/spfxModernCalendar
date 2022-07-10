@@ -14,7 +14,6 @@ import { SPField } from './SPField';
 import Stack from '@fluentui/react/lib/components/Stack/Stack';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/components/Button';
 import { ProgressIndicator } from '@fluentui/react/lib/components/ProgressIndicator';
-import { defaultCalendarNavigationIcons } from '@fluentui/react';
 
 export interface ISPFormProps {
     wpContext: WebPartContext;
@@ -93,6 +92,7 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
             }
             return p;
         });
+        
         const fieldTypeKind: number = form.filter((field => field.internalName === internalName))[0].fieldTypeKind;
         let newValue: any = null;
         switch (fieldTypeKind) {
@@ -102,7 +102,9 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
             default:
                 newValue = changedValue;
         }
+
         data[internalName] = newValue;
+
         if (internalName === "EventDate" && data["EndDate"] === undefined) {
             const currentValue: string | number = formSturcture.filter((item => item.internalName === "EndDate"))[0].value
             data["EndDate"] = currentValue !== null ? currentValue : newValue;
@@ -138,6 +140,7 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
                         {formSturcture.map((p, i) => {
                             return <SPField key={i}
                                 {...p}
+                                fieldIcons={true}
                                 wpContext={wpContext}
                                 listId={listId}
                                 formType={formType}

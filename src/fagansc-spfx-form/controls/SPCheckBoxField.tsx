@@ -48,21 +48,21 @@ export class SPCheckBoxField extends React.Component<ISPCheckBoxFieldProps, ISPC
 
     public render(): JSX.Element {
         const { label, value } = this.props;
-        const readonlyIcon: string = "";//FieldsValue ? "BoxCheckmarkSolid" : "Checkbox";
+        const readonlyIcon: string = this._handleDataFormat(value) ? "BoxCheckmarkSolid" : "Checkbox";
         const _fieldActions: FieldActions = new FieldActions(this.props);
         const iconClass: string = mergeStyles({
             fontSize: 20
         });
-        /*const iconCheckedClass: string = FieldsValue && mergeStyles({
+        const iconCheckedClass: string = this._handleDataFormat(value) && mergeStyles({
             color: "#0078d4"
-        });*/
+        });
         return (
             <div className={styles.fieldContainer}>
                 <FieldLabel
                     Label={label}
                     Required={_fieldActions.isRequired()}
                     UseIcon={_fieldActions.hasIcon()}
-                    TipTool={_fieldActions.hasTipTool()}
+                    TipTool={_fieldActions.isReadOnly() && _fieldActions.hasTipTool()}
                     IconName="CheckboxComposite"
                 />
                 {!(_fieldActions.isReadOnly()) ?
@@ -73,8 +73,7 @@ export class SPCheckBoxField extends React.Component<ISPCheckBoxFieldProps, ISPC
                         onChange={(event, checked) => this._handleOnChange(event, checked)}
                     /> :
                     <div className={styles.readOnly}>
-                        <Icon className={mergeStyles(iconClass, /*iconCheckedClass,*/ styles.fieldIcon)} iconName={readonlyIcon} />
-                        <Icon className={mergeStyles(styles.lockIcon, styles.fieldIcon)} iconName={"Lock"} />
+                        <Icon className={mergeStyles(iconClass, iconCheckedClass, styles.fieldIcon)} iconName={readonlyIcon} />
                     </div>
                 }
             </div>

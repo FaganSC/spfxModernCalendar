@@ -3,7 +3,6 @@ import styles from '../common/FormFields.module.scss';
 
 import { TextField } from '@fluentui/react/lib/TextField';
 import { FieldActions, FieldLabel } from '../common/index';
-import { IIconProps } from '@fluentui/react/lib/components/Icon';
 
 export interface ISPTextBoxFieldProps {
     label: string;
@@ -35,22 +34,21 @@ export class SPTextBoxField extends React.Component<ISPTextBoxFieldProps, ISPTex
     }
 
     private _handleOnChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newTextValue?: string): void => {
-        if(newTextValue===''){
+        if (newTextValue === '') {
             this.setState({ value: null });
         } else {
             this.setState({ value: newTextValue });
         }
     }
 
-    private _handleOnBlur = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>):void =>{
+    private _handleOnBlur = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
         const { value } = this.state;
         this.props.onChanged(value);
     }
 
     public render(): JSX.Element {
         const { value } = this.state;
-        const { label, isReadOnly } = this.props;
-        const iconProps: IIconProps = isReadOnly ? { iconName: 'Lock' } : null;
+        const { label } = this.props;
         const _fieldActions: FieldActions = new FieldActions(this.props);
         return (
             <div className={styles.fieldContainer}>
@@ -58,15 +56,14 @@ export class SPTextBoxField extends React.Component<ISPTextBoxFieldProps, ISPTex
                     Label={label}
                     Required={_fieldActions.isRequired()}
                     UseIcon={_fieldActions.hasIcon()}
-                    TipTool={_fieldActions.hasTipTool()}
+                    TipTool={_fieldActions.isReadOnly() && _fieldActions.hasTipTool()}
                     IconName="TextField"
                 />
                 <TextField
                     readOnly={_fieldActions.isReadOnly()}
                     disabled={_fieldActions.isDisabled()}
-                    className={_fieldActions.getClassNames()}
+                    className={_fieldActions.getClassNames(_fieldActions.isReadOnly() && styles.spFieldReadOnly)}
                     value={value}
-                    iconProps={iconProps}
                     errorMessage={_fieldActions.getErrorMessage()}
                     onBlur={(event) => this._handleOnBlur(event)}
                     onChange={(event, value) => this._handleOnChange(event, value)} />

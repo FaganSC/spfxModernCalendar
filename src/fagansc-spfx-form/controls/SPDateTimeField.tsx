@@ -5,7 +5,6 @@ import styles from '../common/FormFields.module.scss';
 import { FieldActions, FieldLabel } from "../common";
 
 import * as moment from 'moment';
-import { IIconProps } from '@fluentui/react/lib/Icon';
 import { Dropdown, IDropdownOption } from '@fluentui/react/lib/components/Dropdown';
 import { DatePicker, defaultDatePickerStrings } from '@fluentui/react/lib/components/DatePicker';
 import { DayOfWeek } from '@fluentui/react/lib/components/Calendar';
@@ -111,7 +110,8 @@ export class SPDateTimeField extends React.Component<ISPDateTimeFieldProps, ISPD
     this._handleTimeFormat = this._handleTimeFormat.bind(this);
     this._handleOnDateChange = this._handleOnDateChange.bind(this);
     this._handleOnTimeChange = this._handleOnTimeChange.bind(this);
-    //this._onFormatDate = this._onFormatDate.bind(this);
+    this._onFormatDate = this._onFormatDate.bind(this);
+    this._onFormatReadOnlyDate = this._onFormatReadOnlyDate.bind(this);
   }
 
   private _handleDateFormat = (value: string | number): Date => {
@@ -160,17 +160,14 @@ export class SPDateTimeField extends React.Component<ISPDateTimeFieldProps, ISPD
             newDateTime.minutes(Number(time.key));
           }
           break;
-        default:
-          if (value !== time.key) {
-
-          }
       }
       this.props.onChanged(newDateTime.toDate());
     }
   }
 
-  /*private _onFormatDate(date?: Date | string): string {
-    const { DateFormat } = this.props;
+  private _onFormatDate(date?: Date | string): string {
+    //const { DateFormat } = this.props;
+    const DateFormat: string = undefined;
     let format: string = "ddd MMM DD YYYY";
     if (DateFormat !== undefined) {
       format = DateFormat;
@@ -182,14 +179,23 @@ export class SPDateTimeField extends React.Component<ISPDateTimeFieldProps, ISPD
     } else {
       return moment(date.toString()).format(format);
     }
-  }*/
+  }
+
+  private _onFormatReadOnlyDate(date?: Date | string): string {
+    const { displayTime } = this.props;
+    const formatDate: string = "ddd MMM DD YYYY";
+    const formatDateTime: string = "ddd MMM DD YYYY h:mm a";
+    if (displayTime) {
+      return moment(date).format(formatDateTime).toString();
+    } else {
+      return moment(date).format(formatDate).toString();
+    }
+  }
 
   public render(): JSX.Element {
-    const { label, value, isReadOnly, firstDayOfWeek, maxDate, minDate, monthPickerVisible, displayTime, twentyfourHourTime } = this.props;
-    const iconProps: IIconProps = isReadOnly ? { iconName: 'Lock' } : null;
+    const { label, value, firstDayOfWeek, maxDate, minDate, monthPickerVisible, displayTime, twentyfourHourTime } = this.props;
     const _fieldActions: FieldActions = new FieldActions(this.props);
     const displayTimePicker: boolean = displayTime === undefined || displayTime === null ? true : displayTime;
-
 
     return (
       <div className={[styles.fieldContainer, styles.SPDateTimeField].join(' ')}>
@@ -197,7 +203,7 @@ export class SPDateTimeField extends React.Component<ISPDateTimeFieldProps, ISPD
           Label={label}
           Required={_fieldActions.isRequired()}
           UseIcon={_fieldActions.hasIcon()}
-          TipTool={_fieldActions.hasTipTool()}
+          TipTool={_fieldActions.isReadOnly() && _fieldActions.hasTipTool()}
           IconName="Calendar"
         />
         {!(_fieldActions.isReadOnly()) && !(_fieldActions.isDisabled()) ?
@@ -212,7 +218,7 @@ export class SPDateTimeField extends React.Component<ISPDateTimeFieldProps, ISPD
               maxDate={maxDate !== undefined ? maxDate : null}
               minDate={minDate !== undefined ? minDate : null}
               isMonthPickerVisible={monthPickerVisible === undefined ? true : monthPickerVisible}
-              //formatDate={this._onFormatDate}
+              formatDate={this._onFormatDate}
               onSelectDate={(date) => this._handleOnDateChange(date)}
             />
             {displayTimePicker && <>
@@ -222,7 +228,6 @@ export class SPDateTimeField extends React.Component<ISPDateTimeFieldProps, ISPD
                 placeholder="Select an hour"
                 options={twentyfourHourTime ? options24Hours : options12Hours}
                 className={styles.HourPicker}
-              //styles={dropdownStyles}
               />
               <Dropdown
                 selectedKey={this._handleTimeFormat(value, 'minutes')}
@@ -230,7 +235,6 @@ export class SPDateTimeField extends React.Component<ISPDateTimeFieldProps, ISPD
                 placeholder="Select a minute"
                 options={optionsMinutes}
                 className={styles.MinutePicker}
-              //styles={dropdownStyles}
               />
             </>
             }
@@ -238,9 +242,8 @@ export class SPDateTimeField extends React.Component<ISPDateTimeFieldProps, ISPD
           : <TextField
             readOnly={_fieldActions.isReadOnly()}
             disabled={_fieldActions.isDisabled()}
-            className={_fieldActions.getClassNames()}
-            value={value}
-            iconProps={iconProps}
+            className={_fieldActions.getClassNames(styles.spFieldReadOnly)}
+            value={this._onFormatReadOnlyDate(value)}
           />
         }
       </div>
