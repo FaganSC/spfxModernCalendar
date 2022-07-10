@@ -40,8 +40,7 @@ export default class CalendarWebPart extends BaseClientSideWebPart<ICalendarWebP
 
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
-        hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        hasTeamsContext: !!this.context.sdks.microsoftTeams
       }
     );
 

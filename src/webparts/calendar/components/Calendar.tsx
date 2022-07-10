@@ -63,13 +63,17 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
       listId = await _eventService.getDefaultEventsList();
       updateListProperty(listId);
     }
-    let startDate: string = moment().startOf('month').format("YYYY-MM-DD");
-    let endDate: string = moment().endOf('month').format("YYYY-MM-DD");
+    let startDayofWeek: number = moment().startOf('month').day();
+    let endDayofWeek: number = moment().endOf('month').day();
+    let startDate: string = moment().startOf('month').subtract(startDayofWeek + 1, 'days').format("YYYY-MM-DD");
+    let endDate: string = moment().endOf('month').add(7 - endDayofWeek, 'days').format("YYYY-MM-DD");
     if (newDateView) {
       switch (currentView) {
         default:
-          startDate = moment(newDateView).startOf('month').format("YYYY-MM-DD");
-          endDate = moment(newDateView).endOf('month').format("YYYY-MM-DD");
+          startDayofWeek = moment(newDateView).startOf('month').day();
+          endDayofWeek = moment(newDateView).endOf('month').day();
+          startDate = moment(newDateView).startOf('month').subtract(startDayofWeek + 1, 'days').format("YYYY-MM-DD");
+          endDate = moment(newDateView).endOf('month').add(7 - endDayofWeek, 'days').format("YYYY-MM-DD");
       }
     }
 
@@ -260,7 +264,7 @@ export default class Calendar extends React.Component<ICalendarProps, ICalendarS
           primaryGroupAriaLabel="Email actions"
           farItemsGroupAriaLabel="More actions"
         />
-        </>);
+      </>);
     }
   }
 
