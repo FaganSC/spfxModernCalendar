@@ -31,8 +31,8 @@ export class SPChoiceField extends React.Component<ISPChoiceFieldProps, ISPChoic
         this._handleOnChanged = this._handleOnChanged.bind(this);
     }
 
-    private _handleDataFormat = (value: string | number): string | number => {
-        return value === undefined && value === null ? null : value;
+    private _handleDataFormat = (value: string | number): string => {
+        return value === undefined || value === null ? null : value.toString();
     }
 
     private _handleOnChanged = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
@@ -74,7 +74,7 @@ export class SPChoiceField extends React.Component<ISPChoiceFieldProps, ISPChoic
                         readOnly={_fieldActions.isReadOnly()}
                         disabled={_fieldActions.isDisabled()}
                         className={_fieldActions.getClassNames(styles.spFieldReadOnly)}
-                        value={this._handleDataFormat(value).toString()}
+                        value={this._handleDataFormat(value)}
                     />
                 }
             </div>
