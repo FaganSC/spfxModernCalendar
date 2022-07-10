@@ -159,6 +159,27 @@
     }
 }
 
+.SPDateTimeField {
+    .DateTimePicker {
+        display: flex;
+        .DatePicker {
+            width: 50%;
+        }
+        &.DateOnly {
+            .DatePicker {
+                width: 100%;
+            }
+        }
+        .HourPicker {
+            width: 25%;
+            margin: 0 5px;
+        }
+        .MinutePicker {
+            width: 25%;
+        }
+    }
+}
+
 .Attachments {
     .FilePicker {
         display: block !important;

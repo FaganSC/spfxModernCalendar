@@ -28,6 +28,8 @@ export interface ISPFieldProps {
     description: string;
     fieldIcons?: boolean;
     onChanged?: any;
+
+    displayTime?:boolean;
 }
 
 export interface ISPFieldState {
@@ -82,7 +84,7 @@ export class SPField extends React.Component<ISPFieldProps, ISPFieldState> {
 
     private _getCurrentValue = (defaultValue: string | number): string | number => {
         const { currentValue } = this.state;
-        if (defaultValue === undefined && currentValue === null) {
+        if ((defaultValue === undefined && currentValue === null) || (defaultValue === undefined && currentValue.toString().length === 0)) {
             return null;
         } else if (currentValue !== null && defaultValue !== currentValue) {
             return currentValue;
@@ -129,6 +131,7 @@ export class SPField extends React.Component<ISPFieldProps, ISPFieldState> {
                     value={this._getCurrentValue(value)}
                     useTipTool={description}
                     useIcon={useFieldIcons}
+                    displayTime={this.props.displayTime}
                     onChanged={(value) => this._onFieldChange(value)} />)
             case 6: //FieldType: Choice
                 return (<SPChoiceField

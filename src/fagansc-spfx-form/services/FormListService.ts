@@ -109,7 +109,7 @@ export class FormListService {
     }
 
     public updateItem = async (itemId:number, listData: any): Promise<IListUpdateResult> => {
-        const results: any = await this._sp.web.lists.getById(this._listId).items.getById(itemId).update({...listData});
+        const results: any = await this._sp.web.lists.getById(this._listId).items.getById(itemId).update({...listData });
         return results;
     }
 

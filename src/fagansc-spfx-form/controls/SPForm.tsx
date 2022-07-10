@@ -8,11 +8,13 @@ import { FormType } from '../SPForm';
 import { FieldDisplay } from '../common/models';
 
 import { FormListService } from '../services/FormListService';
+import { SPSiteService } from '../services/SPSiteService';
 import { SPField } from './SPField';
 
 import Stack from '@fluentui/react/lib/components/Stack/Stack';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/components/Button';
 import { ProgressIndicator } from '@fluentui/react/lib/components/ProgressIndicator';
+import { defaultCalendarNavigationIcons } from '@fluentui/react';
 
 export interface ISPFormProps {
     wpContext: WebPartContext;
@@ -33,9 +35,11 @@ export interface ISPFormState {
 
 export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
     private _formListService: FormListService;
+    private _spSiteServices: SPSiteService;
     public constructor(props: ISPFormProps) {
         super(props);
         this._formListService = new FormListService(props.wpContext, props.listId);
+        this._spSiteServices = new SPSiteService(props.wpContext);
         this._onFieldChange = this._onFieldChange.bind(this);
         this._onSave = this._onSave.bind(this);
         this.state = {
@@ -52,32 +56,61 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
         switch (formType) {
             case FormType.New:
                 _formListService.getNewFormDisplay(listId)
-                    .then(async (data: FieldDisplay[]) => {
-                        this.setState({ formSturcture: data, isLoading: false });
+                    .then(async (form: FieldDisplay[]) => {
+                        this.setState({ formSturcture: form, isLoading: false });
                     })
                     .catch(error => console.error("Oh no!", error));
                 break;
             default:
                 _formListService.getItemDisplay(listId, itemId)
                     .then(async (data: FieldDisplay[]) => {
-                        this.setState({ formSturcture: data, isLoading: false });
+                        const form: FieldDisplay[] = data.map((p, i) => {
+                            if (p.internalName === "EventDate" || p.internalName === "EndDate") {
+                                if (data.filter((value => value.internalName === "fAllDayEvent"))[0].value) {
+                                    p["displayTime"] = false;
+                                } else {
+                                    p["displayTime"] = true;
+                                }
+                            }
+                            return p;
+                        });
+                        this.setState({ formSturcture: form, isLoading: false });
                     })
                     .catch(error => console.error("Oh no!", error));
         }
     }
 
-    private _onFieldChange = (internalName: string, changedValue: string | number): void => {
+    private _onFieldChange = async (internalName: string, changedValue: string | number): Promise<void> => {
         const { formData, formSturcture } = this.state;
         const data: any = formData;
         const form: FieldDisplay[] = formSturcture.map((p, i) => {
-            /*if(internalName === "fAllDayEvent" && p.internalName==="Title"){
-                p["value"] = "Hello World!";
-                data["Title"] = "Hello World!";
-            }*/
+            if (internalName === "fAllDayEvent" && (p.internalName === "EventDate" || p.internalName === "EndDate")) {
+                if (changedValue) {
+                    p["displayTime"] = false;
+                } else {
+                    p["displayTime"] = true;
+                }
+            }
             return p;
         });
-
-        data[internalName] = changedValue;
+        const fieldTypeKind: number = form.filter((field => field.internalName === internalName))[0].fieldTypeKind;
+        let newValue: any = null;
+        switch (fieldTypeKind) {
+            case 4: //FieldType: DateTime
+                newValue = await this._spSiteServices.convertToUTCTime(changedValue);
+                break;
+            default:
+                newValue = changedValue;
+        }
+        data[internalName] = newValue;
+        if (internalName === "EventDate" && data["EndDate"] === undefined) {
+            const currentValue: string | number = formSturcture.filter((item => item.internalName === "EndDate"))[0].value
+            data["EndDate"] = currentValue !== null ? currentValue : newValue;
+        } else if (internalName === "EndDate" && data["EventDate"] === undefined) {
+            const currentValue: string | number = formSturcture.filter((item => item.internalName === "EventDate"))[0].value
+            data["EventDate"] = currentValue !== null ? currentValue : newValue;
+        }
+        console.log(data);
         this.setState({ formData: data, formSturcture: form });
     }
 
@@ -97,7 +130,6 @@ export class SPForm extends React.Component<ISPFormProps, ISPFormState> {
     public render = (): JSX.Element => {
         const { formSturcture } = this.state;
         const { wpContext, listId, formType } = this.props;
-        console.log(formType);
         return (
             <section>
                 {formSturcture.length === 0 ?
